@@ -13,8 +13,12 @@ export class TimerService {
   private timerSubscription: Subscription | null = null;
   /** used to detect user click interactions for potential double-click detection */
   private waitClickSubject: Subject<void> = new Subject<void>();
+  /** save click subscription */
+  private clickSubjectSubscription: any = null;
   /** stores the current timer value */
   private userTimer$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date(0));
+
+
 
   public get getUserTimer$(): Observable<Date> {
     return this.userTimer$ as Observable<Date>;
@@ -52,21 +56,21 @@ export class TimerService {
   public handleWaitClick(onDoubleClick: () => void): void {
     let lastClickTime = 0;
 
-    const clickSubject$ = this.waitClickSubject.subscribe(() => {
+    this.clickSubjectSubscription = this.waitClickSubject.subscribe(() => {
       const currentTime = Date.now();
       if (currentTime - lastClickTime <= 300) {
         onDoubleClick();
+
+        this.isPaused = true;
       }
       lastClickTime = currentTime;
     });
 
-    clickSubject$.unsubscribe();
   }
 
   public emitWaitClick(): void {
     this.waitClickSubject.next();
 
-    this.isPaused = true;
   }
 
   private startTimer(): void {
@@ -84,6 +88,9 @@ export class TimerService {
   private stopTimer(): void {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
+    }
+    if (this.clickSubjectSubscription) {
+      this.clickSubjectSubscription.unsubscribe();
     }
   }
 }
