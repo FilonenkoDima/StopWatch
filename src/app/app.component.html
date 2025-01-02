@@ -1,6 +1,1 @@
-<h1>{{ this.userTimer$ | async | date: 'HH:mm:ss' }}</h1>
-<button (click)="onToggleTimerMode()">{{ getCounter() ? (isPause ? 'Resume' : 'Pause') : 'Start' }}</button>
-<button (click)="onReset()">Reset</button>
-
-<!-- Wait button for double-click to toggle pause -->
-<button (click)="onWaitClick()">Wait</button>
+<app-stop-watch />
