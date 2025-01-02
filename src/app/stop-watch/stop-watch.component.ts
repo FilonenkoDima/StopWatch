@@ -3,11 +3,12 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 
 import { TimerService } from './timer.service';
 import {Observable} from 'rxjs';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-stop-watch',
   templateUrl: './stop-watch.component.html',
-  imports: [AsyncPipe, DatePipe]
+  imports: [AsyncPipe, DatePipe, NgbModule],
 })
 export class StopWatch implements OnInit {
   private timerService: TimerService = inject(TimerService);
