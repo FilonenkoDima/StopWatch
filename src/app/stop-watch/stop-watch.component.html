@@ -1,0 +1,9 @@
+    <h1>{{ userTimer | async | date: 'HH:mm:ss' }}</h1>
+    <button (click)="onToggleTimerMode()">
+      {{ isTimerPaused ?
+        (isTimerStarted ?
+            'Resume' : 'Start')
+        : 'Pause' }}
+    </button>
+    <button (click)="onReset()">Reset</button>
+    <button (click)="onWaitClick()">Wait</button>
