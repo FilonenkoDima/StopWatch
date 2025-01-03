@@ -1,20 +1,23 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import { AsyncPipe, DatePipe } from '@angular/common';
+import {Observable, Subscription} from 'rxjs';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { TimerService } from './timer.service';
-import {Observable} from 'rxjs';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-stop-watch',
   templateUrl: './stop-watch.component.html',
   imports: [AsyncPipe, DatePipe, NgbModule],
 })
-export class StopWatch implements OnInit {
+export class StopWatch implements OnInit, OnDestroy {
   private timerService: TimerService = inject(TimerService);
+  private timer$!: Subscription;
+  private doubleClick$!: Subscription;
 
   public ngOnInit(): void {
-    this.timerService.handleWaitClick(() => this.timerService.togglePause());
+    this.timer$ = this.timerService.startTimer().subscribe();
+    this.doubleClick$ = this.timerService.handleWaitClick().subscribe();
   }
 
   public get userTimer(): Observable<Date> {
@@ -39,5 +42,10 @@ export class StopWatch implements OnInit {
 
   public onWaitClick(): void {
     this.timerService.emitWaitClick();
+  }
+
+  ngOnDestroy() {
+    this.timer$.unsubscribe();
+    this.doubleClick$.unsubscribe();
   }
 }
