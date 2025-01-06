@@ -1,0 +1,23 @@
+<div class="container-sm">
+  <div class="row mt-5">
+    <div class="col-4 offset-4">
+      <div class="card border-0">
+        <div class="card-body">
+          <h4 class="card-title text-center">{{ userTimer | async | date: 'HH:mm:ss':'UMC' }}</h4>
+          <div class="d-flex justify-content-center">
+            <div class="btn-group" role="group">
+              <button class="btn btn-info" (click)="onToggleTimerMode()">
+                {{ isTimerPaused ?
+                  (isTimerStarted ?
+                      'Resume' : 'Start')
+                  : 'Pause' }}
+              </button>
+              <button class="btn btn-danger" (click)="onReset()">Reset</button>
+              <button class="btn btn-secondary" (click)="onWaitClick()">Wait</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

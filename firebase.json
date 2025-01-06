@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/stop-watch/browser",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
