@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject, timer, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
+import {toZonedTime } from 'date-fns-tz';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,7 +15,11 @@ export class TimerService {
   /** used to detect user click interactions for potential double-click detection */
   private waitClickSubject: Subject<void> = new Subject<void>();
   /** stores the current timer value */
-  private userTimer$: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date(0));
+  private userTimer$: BehaviorSubject<Date> = new BehaviorSubject<Date>(this.utcZonedTimeFromNumber(0));
+  /** set timer to 0 time zone */
+  private utcZonedTimeFromNumber(time: number): Date  {
+    return  toZonedTime(new Date(time), 'UTC');
+  }
 
   public get getUserTimer$(): Observable<Date> {
     return this.userTimer$ as Observable<Date>;
@@ -36,18 +42,18 @@ export class TimerService {
     this.isPaused = !this.isPaused;
 
     if(!this.counter && !this.isPaused) {
-      this.startTimer();
+      this.startTimer$();
     }
   }
 
   public resetTimer(): void {
     this.counter = 0;
-    this.userTimer$.next(new Date(0));
+    this.userTimer$.next(this.utcZonedTimeFromNumber(0));
     this.isPaused = true;
   }
 
   /** Handles user click interactions for detecting double-clicks */
-  public handleWaitClick():Observable<void> {
+  public handleWaitClick$():Observable<void> {
     let lastClickTime = 0;
 
     return this.waitClickSubject.pipe(tap(() => {
@@ -63,12 +69,12 @@ export class TimerService {
     this.waitClickSubject.next();
   }
 
-  public startTimer():Observable<number> {
+  public startTimer$():Observable<number> {
     return timer(0, 1000).pipe(
       tap(() => {
         if (!this.isPaused) {
           this.counter++;
-          this.userTimer$.next(new Date(this.counter * 1000));
+          this.userTimer$.next(this.utcZonedTimeFromNumber(this.counter * 1000));
         }
       })
     );

@@ -16,8 +16,8 @@ export class StopWatch implements OnInit, OnDestroy {
   private doubleClick$!: Subscription;
 
   public ngOnInit(): void {
-    this.timer$ = this.timerService.startTimer().subscribe();
-    this.doubleClick$ = this.timerService.handleWaitClick().subscribe();
+    this.timer$ = this.timerService.startTimer$().subscribe();
+    this.doubleClick$ = this.timerService.handleWaitClick$().subscribe();
   }
 
   public get userTimer(): Observable<Date> {
